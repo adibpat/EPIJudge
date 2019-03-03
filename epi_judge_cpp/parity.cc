@@ -1,7 +1,12 @@
 #include "test_framework/generic_test.h"
 short Parity(unsigned long long x) {
-  // TODO - you fill in here.
-  return 0;
+  int shift = 32;
+  while (shift) {
+    x ^= x >> shift;
+    shift = shift >> 1;
+  }
+  x &= 1;
+  return x;
 }
 
 int main(int argc, char* argv[]) {
