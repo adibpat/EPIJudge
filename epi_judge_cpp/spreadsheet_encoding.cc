@@ -3,8 +3,11 @@
 using std::string;
 
 int SSDecodeColID(const string& col) {
-  // TODO - you fill in here.
-  return 0;
+  int result = 0;
+  for (size_t i = 0; i < col.size(); ++i) {
+    result = result*26 + (col[i] - 'A' + 1);
+  }
+  return result;
 }
 
 int main(int argc, char* argv[]) {
