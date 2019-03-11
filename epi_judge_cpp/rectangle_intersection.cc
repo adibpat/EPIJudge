@@ -6,9 +6,24 @@ struct Rect {
   int x, y, width, height;
 };
 
+int max (int a, int b) {
+  if (a > b) return a;
+  return b;
+}
+
+int min (int a, int b) {
+  if (a < b) return a;
+  return b;
+}
+
 Rect IntersectRectangle(const Rect& R1, const Rect& R2) {
-  // TODO - you fill in here.
-  return {0, 0, 0, 0};
+  if ((R1.x <= R2.x + R2.width) && 
+    (R1.x + R1.width >= R2.x)   && 
+    (R1.y <= R2.y + R2.height)  && 
+    (R1.y + R1.height >= R2.y)) {
+      return {max(R1.x, R2.x), max(R1.y, R2.y), min(R1.x + R1.width, R2.x + R2.width)-max(R1.x, R2.x), min(R1.y + R1.height, R2.y + R2.height)-max(R1.y, R2.y)};
+  }
+  return {0, 0, -1, -1};
 }
 bool operator==(const Rect& r1, const Rect& r2) {
   return std::tie(r1.x, r1.y, r1.width, r1.height) ==
