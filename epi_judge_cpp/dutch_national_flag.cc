@@ -6,10 +6,46 @@
 using std::vector;
 typedef enum { kRed, kWhite, kBlue } Color;
 
-void DutchFlagPartition(int pivot_index, vector<Color>* A_ptr) {
-  // TODO - you fill in here.
-  return;
+void swap (Color& a, Color& b) 
+{
+  Color temp = a;
+  a = b;
+  b = temp;
 }
+
+void DutchFlagPartition(int pivot_index, vector<Color>* A_ptr) {
+  auto &A = *A_ptr;
+  int small = 0, i = 0, end = A.size() -1;
+  int pivot = A[pivot_index];
+#ifdef DBG
+  std::cout << "Pivot index " << pivot_index << std::endl;
+  for (;i<=end;i++) {
+    std::cout << A[i] << " ";
+  }
+  std::cout << std::endl;
+#endif
+  for (i=0;i<=end;) {
+    if (A[i] < pivot) {
+      //std::cout << "Swap "<< A[i] << " and " << A[small] << std::endl;
+      swap(A[i], A[small]);
+      small++; i++;
+    } else if (A[i] == pivot) {
+      //std::cout << "Skip swap for index " << i << std::endl;
+      i++;
+    } else {
+      //std::cout << "Swap "<< A[i] << " and " << A[end] << std::endl;
+      swap(A[i], A[end]);
+      end--;
+    }
+  }
+#ifdef DBG  
+  for (i=0;i<=end;i++) {
+    std::cout << A[i] << " ";
+  }
+  std::cout << std::endl;
+#endif
+}
+
 void DutchFlagPartitionWrapper(TimedExecutor& executor, const vector<int>& A,
                                int pivot_idx) {
   vector<Color> colors;
