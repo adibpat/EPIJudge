@@ -1,5 +1,6 @@
 #include <memory>
 #include <vector>
+#include <queue>
 #include "test_framework/generic_test.h"
 #include "test_framework/serialization_traits.h"
 #include "test_framework/timed_executor.h"
@@ -13,8 +14,21 @@ struct BinaryTreeNode {
   explicit BinaryTreeNode(T data) : data(data){};
 };
 
+std::queue<BinaryTreeNode<int>* > Q;
+
 void ConstructRightSibling(BinaryTreeNode<int>* tree) {
-  // TODO - you fill in here.
+  if (tree) Q.push(tree);
+
+  while (!Q.empty()) {
+    int q_sz = Q.size();
+    for (int i = 0; i < q_sz; ++i) {
+      BinaryTreeNode<int>* front = Q.front(); Q.pop();
+      if (front->left) Q.push(front->left.get());
+      if (front->right) Q.push(front->right.get());
+      if (i < q_sz - 1 && Q.front()) front->next = Q.front();
+    }
+  }
+ 
   return;
 }
 template <>

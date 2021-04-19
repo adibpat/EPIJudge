@@ -1,6 +1,8 @@
 #include <istream>
 #include <string>
 #include <vector>
+#include <set>
+#include <map>
 #include "test_framework/generic_test.h"
 #include "test_framework/serialization_traits.h"
 #include "test_framework/test_failure.h"
@@ -11,13 +13,49 @@ struct Coordinate {
   bool operator==(const Coordinate& that) const {
     return x == that.x && y == that.y;
   }
+  bool operator<(const Coordinate& that) const {
+    if (x == that.x) return y < that.y;
 
+    return x < that.x;
+  }
+  Coordinate(int _x, int _y) : x(_x), y(_y) {}
   int x, y;
 };
+
+bool SearchMazeHelper(vector<vector<Color>>& maze, 
+                      const Coordinate current,
+                      const Coordinate& e,
+                      vector<Coordinate>& result) {
+  if (current == e) {
+    result.emplace_back(current);
+    return true;
+  }
+  
+  if (current.x >= maze.size() || current.x < 0) return false;
+  if (current.y >= maze[0].size() || current.y < 0) return false;
+  if (maze[current.x][current.y] == kBlack) {
+    return false;
+  }
+
+  maze[current.x][current.y] = kBlack;
+  result.emplace_back(current);
+  if (SearchMazeHelper(maze, Coordinate(current.x+1, current.y), e, result) ||
+      SearchMazeHelper(maze, Coordinate(current.x-1, current.y), e, result) ||
+      SearchMazeHelper(maze, Coordinate(current.x, current.y+1), e, result) ||
+      SearchMazeHelper(maze, Coordinate(current.x, current.y-1), e, result)) {
+    return true;
+  }
+  
+  result.pop_back();
+  return false;
+}
+
 vector<Coordinate> SearchMaze(vector<vector<Color>> maze, const Coordinate& s,
                               const Coordinate& e) {
-  // TODO - you fill in here.
-  return {};
+  vector<Coordinate> result;
+  
+  SearchMazeHelper(maze, s, e, result);
+  return result;
 }
 template <>
 struct SerializationTraits<Color> : SerializationTraits<int> {

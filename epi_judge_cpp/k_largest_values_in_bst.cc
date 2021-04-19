@@ -5,9 +5,22 @@
 using std::unique_ptr;
 using std::vector;
 
+void FindKLargestInBSTHelper(BstNode<int>* tree, vector<int>&result, int k) {
+  if (tree == nullptr) return;
+
+  if (k == result.size()) return;
+  FindKLargestInBSTHelper(tree->right.get(), result, k);
+  if (k == result.size()) return;
+  result.push_back(tree->data);
+  FindKLargestInBSTHelper(tree->left.get(), result, k);
+}
+
 vector<int> FindKLargestInBST(const unique_ptr<BstNode<int>>& tree, int k) {
-  // TODO - you fill in here.
-  return {};
+  vector<int> result;
+
+  FindKLargestInBSTHelper(tree.get(), result, k);
+
+  return result;
 }
 
 int main(int argc, char* argv[]) {

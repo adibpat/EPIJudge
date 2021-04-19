@@ -1,15 +1,32 @@
 #include <string>
 #include <vector>
+#include <memory>
 #include "binary_tree_node.h"
 #include "test_framework/generic_test.h"
 #include "test_framework/timed_executor.h"
 using std::string;
 using std::vector;
 
-unique_ptr<BinaryTreeNode<int>> ReconstructPreorder(
+unique_ptr<BinaryTreeNode<int> > ReconstructPreorderHelper(const vector<int*>& preorder, int& pos)
+{
+  if (pos >= preorder.size()) return nullptr;
+
+  if (preorder[pos] == nullptr) return nullptr;
+  
+  unique_ptr<BinaryTreeNode<int> > node = std::make_unique<BinaryTreeNode<int> >(*(preorder[pos]));
+  pos++;
+  node->left = ReconstructPreorderHelper(preorder, pos);
+  pos++;
+  node->right = ReconstructPreorderHelper(preorder, pos);
+
+  return node;
+}
+
+unique_ptr<BinaryTreeNode<int> > ReconstructPreorder(
     const vector<int*>& preorder) {
   // TODO - you fill in here.
-  return nullptr;
+  int pos = 0;
+  return ReconstructPreorderHelper(preorder, pos);
 }
 unique_ptr<BinaryTreeNode<int>> ReconstructPreorderWrapper(
     TimedExecutor& executor, const vector<string>& preorder) {
